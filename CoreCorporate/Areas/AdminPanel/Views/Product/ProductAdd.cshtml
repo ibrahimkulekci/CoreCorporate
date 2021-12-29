@@ -1,0 +1,101 @@
+﻿@model EntityLayer.Concrete.Product
+@{
+    ViewData["Title"] = "ProdcutAdd";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+@section styles{
+    <link href="~/admintheme/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
+    <link href="~/admintheme/css/plugins/iCheck/custom.css" rel="stylesheet">
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Yeni Ürün Ekle</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form role="form" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    @Html.Label("Ürün Adı")
+                                    @Html.TextBoxFor(x => x.ProductTitle, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.ProductTitle, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Ürün Kodu")
+                                    @Html.TextBoxFor(x => x.ProductCode, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.ProductCode, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Ürün Kategorisi")
+                                    @Html.DropDownListFor(x => x.ProductCategoryID, (List<SelectListItem>)ViewBag.categoryList, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.ProductCategoryID)
+                                </div>
+                                <div class="form-group">
+                                    <label>Ürün Görseli</label>
+                                    <div class="custom-file">
+                                        <input id="logo" type="file" class="custom-file-input" name="ProductImageFile">
+                                        <label for="logo" class="custom-file-label">Resim seçiniz...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Ürün Açıklaması")
+                                    <div class="summernote" name="ProductContent"></div>
+                                    @Html.TextAreaFor(x => x.ProductContent, new { @class = "form-control", @row = 5 })
+                                    @Html.ValidationMessageFor(x => x.ProductContent, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Yayınlansın mı?")
+                                    <div class="checkbox i-checks">
+                                        @Html.CheckBoxFor(m => m.ProductStatus)
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.ProductStatus, null, new { @class = "text-danger" })
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Yayınla</strong></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/admintheme/js/plugins/summernote/summernote-bs4.js"></script>
+    <script src="~/admintheme/js/plugins/iCheck/icheck.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#ProductContent').summernote({
+                height: 300,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: true
+            });
+
+            $('.custom-file-input').on('change', function () {
+                let fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').addClass("selected").html(fileName);
+            });
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+        });
+    </script>
+
+}

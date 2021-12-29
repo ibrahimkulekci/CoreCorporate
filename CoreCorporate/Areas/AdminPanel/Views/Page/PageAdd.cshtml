@@ -1,0 +1,81 @@
+﻿@model EntityLayer.Concrete.Page
+@{
+    ViewData["Title"] = "PageAdd";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+@section styles{
+    <link href="~/admintheme/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
+    <link href="~/admintheme/css/plugins/iCheck/custom.css" rel="stylesheet">
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Yeni Sayfa Ekle</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @using (Html.BeginForm("PageAdd", "Page", FormMethod.Post))
+                            {
+                                <div class="form-group">
+                                    @Html.Label("Sayfa Adı")
+                                    @Html.TextBoxFor(x => x.PageTitle, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.PageTitle)
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Sayfa İçeriği")
+                                    @Html.TextAreaFor(x => x.PageContent, 10, 3, new { @class = "form-control summernote" })
+                                    @Html.ValidationMessageFor(x => x.PageContent)
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Yayınlansın mı?")
+                                    <div class="checkbox i-checks">
+                                        @Html.CheckBoxFor(m => m.PageStatus)
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.PageStatus, null, new { @class = "help-block" })
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary float-right" type="submit"><strong>Yayınla</strong></button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/admintheme/js/plugins/summernote/summernote-bs4.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('.summernote').summernote({
+                height: 400
+            });
+
+        });
+    </script>
+
+    <!-- iCheck -->
+    <script src="~/admintheme/js/plugins/iCheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,110 @@
+﻿@model EntityLayer.Concrete.Service
+
+@{
+    ViewData["Title"] = "ServiceUpdate";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+@section styles{
+    <link href="~/admintheme/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
+    <link href="~/admintheme/css/plugins/iCheck/custom.css" rel="stylesheet">
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Hizmet Düzenle</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form class="form-group" method="post" enctype="multipart/form-data">
+                                @Html.HiddenFor(x => x.ServiceID)
+                                @Html.HiddenFor(x => x.ServiceCreatedDate)
+                                @Html.HiddenFor(x=>x.ServiceImage)
+                                <div class="form-group">
+                                    @Html.Label("Hizmet Adı")
+                                    @Html.TextBoxFor(x => x.ServiceTitle, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.ServiceTitle, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Hizmet Görseli</label>
+                                    <div class="img-preview img-preview-sm">
+                                        @if (Model.ServiceImage != "nullimage.jpg")
+                                        {
+                                            <img src="~/img/ServiceImages/@Html.DisplayTextFor(x=>x.ServiceImage)" style="height: 130px; width: 200px;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/@Html.DisplayTextFor(x=>x.ServiceImage)" style="height: 130px; width: 200px;" />
+                                        }
+                                    </div><br />
+                                    <div class="custom-file">
+                                        <input id="logo" type="file" class="custom-file-input" name="ServiceImageFile">
+                                        <label for="logo" class="custom-file-label">Resim seçiniz...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Hizmet Kategorisi")
+                                    @Html.DropDownListFor(x => x.ServiceCategoryID, (List<SelectListItem>)ViewBag.categoryList, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.ServiceCategoryID)
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Hizmet Açıklaması")
+                                    <div class="summernote" name="ServiceContent"></div>
+                                    @Html.TextAreaFor(x => x.ServiceContent, new { @class = "form-control", @row = 5 })
+                                    @Html.ValidationMessageFor(x => x.ServiceContent, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Yayınlansın mı?")
+                                    <div class="checkbox i-checks">
+                                        @Html.CheckBoxFor(m => m.ServiceStatus)
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.ServiceStatus, null, new { @class = "text-danger" })
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Düzenle</strong></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/admintheme/js/plugins/summernote/summernote-bs4.js"></script>
+    <script src="~/admintheme/js/plugins/iCheck/icheck.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#ServiceContent').summernote({
+                height: 300,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: true
+            });
+
+            $('.custom-file-input').on('change', function () {
+                let fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').addClass("selected").html(fileName);
+            });
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+        });
+    </script>
+
+}

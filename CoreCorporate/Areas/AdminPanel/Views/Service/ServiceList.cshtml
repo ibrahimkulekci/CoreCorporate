@@ -1,0 +1,59 @@
+﻿@using EntityLayer.Concrete
+@model List<Service>
+@{
+    ViewData["Title"] = "ServiceList";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Tüm Hizmetler</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <a href="~/AdminPanel/Service/ServiceAdd" class="btn btn-primary btn-sm">Yeni Hizmetler Ekle</a>
+                </div>
+                <div class="ibox-content">
+                    @if (Model.Count <= 0)
+                    {
+                        <h2 class="text-center">Henüz hizmet eklenmemiştir!</h2>
+                    }
+                    else
+                    {
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Hizmet Adı</th>
+                                    <th>Hizmet Url</th>
+                                    <th>Hizmet Durumu</th>
+                                    <th>Hizmet Son Düzenleme</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.ServiceID</td>
+                                        <td>@item.ServiceTitle</td>
+                                        <td>@item.ServiceUrl</td>
+                                        <td>@Html.Raw(item.ServiceStatus == true ? "<span class='badge badge-success'>Yayında</span>" : "<span class='badge badge-danger'>Yayında Değil</span>")</td>
+                                        <td>@(((DateTime)item.ServiceUpdatedDate).ToString("dd.MM.yyyy"))</td>
+                                        <td> <a href="~/AdminPanel/Service/ServiceUpdate/@item.ServiceID" class="btn btn-w-m btn-primary">Düzenle</a> </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

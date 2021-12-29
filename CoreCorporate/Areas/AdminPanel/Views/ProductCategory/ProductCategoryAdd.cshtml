@@ -1,0 +1,90 @@
+﻿@model EntityLayer.Concrete.ProductCategory
+@{
+    ViewData["Title"] = "ProductCategoryAdd";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+@section styles{
+    <link href="~/admintheme/css/plugins/summernote/summernote-bs4.css" rel="stylesheet">
+    <link href="~/admintheme/css/plugins/iCheck/custom.css" rel="stylesheet">
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Yeni Ürün Kategorisi Ekle</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form role="form" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    @Html.Label("Ürün Kategori Adı")
+                                    @Html.TextBoxFor(x => x.ProductCategoryTitle, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(x => x.ProductCategoryTitle, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Hizmet Görseli</label>
+                                    <div class="custom-file">
+                                        <input id="logo" type="file" class="custom-file-input" name="ProductCategoryImageFile">
+                                        <label for="logo" class="custom-file-label">Resim seçiniz...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Ürün Kategorisi Açıklaması")
+                                    <div class="summernote" name="ProductCategoryContent"></div>
+                                    @Html.TextAreaFor(x => x.ProductCategoryContent, new { @class = "form-control", @row = 5 })
+                                    @Html.ValidationMessageFor(x => x.ProductCategoryContent, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Yayınlansın mı?")
+                                    <div class="checkbox i-checks">
+                                        @Html.CheckBoxFor(m => m.ProductCategoryStatus)
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.ProductCategoryStatus, null, new { @class = "text-danger" })
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Yayınla</strong></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/admintheme/js/plugins/summernote/summernote-bs4.js"></script>
+    <script src="~/admintheme/js/plugins/iCheck/icheck.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#ProductCategoryContent').summernote({
+                height: 300,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: true
+            });
+
+            $('.custom-file-input').on('change', function () {
+                let fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').addClass("selected").html(fileName);
+            });
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+        });
+    </script>
+
+}
