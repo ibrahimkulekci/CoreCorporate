@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20211226205926_mig_add_table_column_galleryurl")]
     partial class mig_add_table_column_galleryurl
     {

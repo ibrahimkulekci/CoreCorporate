@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -17,10 +18,10 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
     [Area("AdminPanel")]
     public class ProductController : Controller
     {
-        ProductManager pm = new ProductManager(new EfProductRepository());
+        ProductManager pm = new ProductManager(new EfProductRepository(new AppDbContext()));
         ProductValidator pv = new ProductValidator();
 
-        ProductCategoryManager pcm = new ProductCategoryManager(new EfProductCategoryRepository());
+        ProductCategoryManager pcm = new ProductCategoryManager(new EfProductCategoryRepository(new AppDbContext()));
 
         public List<SelectListItem> GetProductCategoryList()
         {

@@ -1,0 +1,42 @@
+﻿@using EntityLayer.Concrete
+@model List<Gallery>
+@{
+    ViewData["Title"] = "Galeriler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="innerBanner">
+    <div class="inner-content">
+        <h2><span>Galeriler</span></h2>
+        <div>
+        </div>
+    </div>
+</section>
+
+<main id="main">
+
+    <section id="services">
+        <div class="container">
+
+            <div class="row">
+
+                @if (Model.Count <= 0)
+                {
+                    <h2 class="text-center">Henüz galeri eklenmemiştir!</h2>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-lg-4">
+                            <div class="box wow fadeInLeft" style="visibility: visible; animation-name: fadeInLeft;">
+                                <div class="icon svgImg"><img src="~/img/GalleryImages/@item.GalleryImage" alt="@item.GalleryTitle" style="width:235px;"></div>
+                                <h4 class="title"><a href="/Gallery/Details?url=@item.GalleryUrl">@item.GalleryTitle</a></h4>
+                                <p class="description"></p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+</main>

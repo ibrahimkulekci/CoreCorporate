@@ -1,0 +1,39 @@
+﻿@model EntityLayer.Concrete.Contact
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12 animated fadeInRight">
+            <div class="mail-box-header">
+                <h2>
+                    İletişim Mesaj Detayı
+                </h2>
+                <div class="mail-tools tooltip-demo m-t-md">
+
+
+                    <h3>
+                        <span class="font-normal">Konu: </span>@Model.Subject
+                    </h3>
+                    <h5>
+                        <span class="float-right font-normal">@(((DateTime)Model.GalleryCreatedDate).ToString("dd.MM.yyyy"))</span>
+                        <span class="font-normal">Gönderen: </span>@Model.NameSurname - @Model.Email
+                    </h5>
+                </div>
+            </div>
+            <div class="mail-box">
+
+
+                <div class="mail-body">
+                    <p>
+                        @Html.Raw(Model.Message)
+                    </p>
+                </div>
+                
+
+
+            </div>
+        </div>
+    </div>
+</div>

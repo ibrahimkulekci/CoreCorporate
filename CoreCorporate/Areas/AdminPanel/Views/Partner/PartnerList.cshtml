@@ -1,4 +1,5 @@
-﻿
+﻿@using EntityLayer.Concrete
+@model List<Partner>
 @{
     ViewData["Title"] = "PartnerList";
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
@@ -18,48 +19,38 @@
                     <a href="~/AdminPanel/Partner/PartnerAdd" class="btn btn-primary btn-sm">Yeni Çözüm Ortağı Ekle</a>
                 </div>
                 <div class="ibox-content">
-
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Çözüm Ortak Adı</th>
-                                <th>Çözüm Ortak Url</th>
-                                <th>Çözüm Ortak Oluşturma Tarihi</th>
-                                <th>İşlemler</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Dekorasyon</td>
-                                <td>dekorasyon</td>
-                                <td>28.11.2021</td>
-                                <td> <button type="button" class="btn btn-w-m btn-primary">Düzenle</button> </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>İnşaat</td>
-                                <td>insaat</td>
-                                <td>28.11.2021</td>
-                                <td> <button type="button" class="btn btn-w-m btn-primary">Düzenle</button> </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Tadilat</td>
-                                <td>tadilat</td>
-                                <td>28.11.2021</td>
-                                <td> <button type="button" class="btn btn-w-m btn-primary">Düzenle</button> </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Dış Cephe</td>
-                                <td>dis-cephe</td>
-                                <td>28.11.2021</td>
-                                <td> <button type="button" class="btn btn-w-m btn-primary">Düzenle</button> </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    @if (Model.Count <= 0)
+                    {
+                        <h2 class="text-center">Henüz çözüm ortağı eklenmemiştir!</h2>
+                    }
+                    else
+                    {
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Çözüm Ortak Adı</th>
+                                    <th>Çözüm Ortak Url</th>
+                                    <th>Çözüm Ortak Durumu</th>
+                                    <th>Çözüm Ortak Son Düzenleme</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.PartnerID</td>
+                                        <td>@item.PartnerTitle</td>
+                                        <td>@item.PartnerUrl</td>
+                                        <td>@Html.Raw(item.PartnerStatus == true ? "<span class='badge badge-success'>Yayında</span>" : "<span class='badge badge-danger'>Yayında Değil</span>")</td>
+                                        <td>@(((DateTime)item.PartnerUpdateDate).ToString("dd.MM.yyyy"))</td>
+                                        <td> <a href="~/AdminPanel/Partner/PartnerUpdate/@item.PartnerID" class="btn btn-w-m btn-primary">Düzenle</a> </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
                 </div>
             </div>
         </div>

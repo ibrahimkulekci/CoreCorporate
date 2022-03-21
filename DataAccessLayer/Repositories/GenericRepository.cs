@@ -11,44 +11,49 @@ namespace DataAccessLayer.Repositories
 {
     public class GenericRepository<T> : IGenericDal<T> where T : class
     {
-        Context c = new Context();
+        //AppDbContext c = new AppDbContext();
+        private readonly AppDbContext _c;
+        public GenericRepository(AppDbContext c)
+        {
+            _c = c;
+        }
 
         public void Delete(T p)
         {
-            c.Remove(p);
-            c.SaveChanges();
+            _c.Remove(p);
+            _c.SaveChanges();
         }
 
         public T GetById(int id)
         {
-            return c.Set<T>().Find(id);
+            return _c.Set<T>().Find(id);
         }
 
         public T GetByUrl(string p)
         {
-            return c.Set<T>().Find(p);
+            return _c.Set<T>().Find(p);
         }
 
         public List<T> GetListAll()
         {
-            return c.Set<T>().ToList();
+            return _c.Set<T>().ToList();
         }
 
         public List<T> GetListAll(Expression<Func<T, bool>> filter)
         {
-            return c.Set<T>().Where(filter).ToList();
+            return _c.Set<T>().Where(filter).ToList();
         }
 
         public void Insert(T p)
         {
-            c.Add(p);
-            c.SaveChanges();
+            _c.Add(p);
+            _c.SaveChanges();
         }
 
         public void Update(T p)
         {
-            c.Update(p);
-            c.SaveChanges();
+            _c.Update(p);
+            _c.SaveChanges();
         }
     }
 }

@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IGalleryService:IGenericService<Gallery>
+    public interface IGalleryService : IGenericService<Gallery>
     {
+        
     }
 }

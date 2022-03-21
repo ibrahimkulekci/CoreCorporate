@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
 using System;
@@ -11,6 +12,9 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfProductRepository:GenericRepository<Product>,IProductDal
     {
+        public EfProductRepository(AppDbContext dbContext) : base(dbContext)
+        {
 
+        }
     }
 }

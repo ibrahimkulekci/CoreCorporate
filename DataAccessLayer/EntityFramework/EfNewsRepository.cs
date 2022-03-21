@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
 using System;
@@ -11,5 +12,9 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfNewsRepository:GenericRepository<News>, INewsDal
     {
+        public EfNewsRepository(AppDbContext dbContext) : base(dbContext)
+        {
+
+        }
     }
 }

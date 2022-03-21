@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IGenericService<T>
+    public interface IGenericService<T>  where T : class
     {
         void TAdd(T p);
         void TDelete(T p);
@@ -14,6 +14,8 @@ namespace BusinessLayer.Abstract
         List<T> GetList();
         T TGetById(int id);
         T TGetByUrl(string p);
+        
+        
 
     }
 }

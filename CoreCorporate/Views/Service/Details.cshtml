@@ -1,0 +1,33 @@
+﻿@model EntityLayer.Concrete.Service
+@{
+    ViewData["Title"] = Model.ServiceTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="innerBanner">
+    <div class="inner-content">
+        <h2><span>@Model.ServiceTitle</span></h2>
+        <div>
+        </div>
+    </div>
+</section>
+
+<main id="main">
+
+    <!--==========================
+      About Section
+    ============================-->
+    <section id="about" class="wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 content">
+                    <img src="~/img/ServiceImages/@Model.ServiceImage" alt="@Model.ServiceTitle" style="width:100%;" />
+                </div><br /><br /><br />
+                <div class="col-lg-12 content">
+                    @Html.Raw(Model.ServiceContent)
+                </div>
+            </div>
+
+        </div>
+    </section><!-- #about -->
+
+</main>

@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -16,7 +17,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
     [Area("AdminPanel")]
     public class ProductCategoryController : Controller
     {
-        ProductCategoryManager pcm = new ProductCategoryManager(new EfProductCategoryRepository());
+        ProductCategoryManager pcm = new ProductCategoryManager(new EfProductCategoryRepository(new AppDbContext()));
         ProductCategoryValidator pcv = new ProductCategoryValidator();
 
         public IActionResult ProductCategoryList()

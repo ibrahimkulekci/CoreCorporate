@@ -1,0 +1,48 @@
+﻿@using EntityLayer.Concrete
+@model List<Team>
+@{
+    ViewData["Title"] = "Ekibimiz";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="innerBanner">
+    <div class="inner-content">
+        <h2><span>Ekibimiz</span></h2>
+        <div>
+        </div>
+    </div>
+</section>
+
+<main id="main">
+    <section id="team" class="wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+        <div class="container">
+            <div class="row">
+                @if (Model.Count <= 0)
+                {
+                    <h2 class="text-center">Henüz ekibimiz eklenmemiştir!</h2>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-lg-3 col-md-6">
+                            <div class="member">
+                                <div class="pic">
+                                    <img src="/img/TeamImages/@item.TeamImage" alt="@item.TeamName">
+                                </div>
+                                <div class="details">
+                                    <h4>@item.TeamName</h4>
+                                    <span>@item.TeamPosition</span>
+                                    <div class="social">
+                                        @Html.Raw(item.TeamDescription)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+</main>
+

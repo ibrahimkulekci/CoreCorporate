@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(AppDbContext))]
     partial class ContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -35,6 +35,12 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("CatalogImage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CatalogPdfIframe")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CatalogPdfUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("CatalogStatus")
                         .HasColumnType("bit");
 
@@ -50,6 +56,42 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("CatalogID");
 
                     b.ToTable("Catalogs");
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("GalleryCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("GalleryUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MarkRead")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameSurname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Gallery", b =>
@@ -83,6 +125,62 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("GalleryID");
 
                     b.ToTable("Galleries");
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.GalleryImage", b =>
+                {
+                    b.Property<int>("GalleryImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GalleryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("GalleryImageId");
+
+                    b.ToTable("GalleryImages");
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.Menu", b =>
+                {
+                    b.Property<int>("MenuID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("MenuCreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MenuDisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MenuParentID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("MenuStatus")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("MenuUpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MenuUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MenuID");
+
+                    b.ToTable("Menus");
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.News", b =>
@@ -352,6 +450,63 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("ServiceCategories");
                 });
 
+            modelBuilder.Entity("EntityLayer.Concrete.Setting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.Slider", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ButtonText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ButtonUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Sliders");
+                });
+
             modelBuilder.Entity("EntityLayer.Concrete.Team", b =>
                 {
                     b.Property<int>("TeamID")
@@ -380,9 +535,39 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("TeamUpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("TeamUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("TeamID");
 
                     b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.User", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Mail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameSurname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

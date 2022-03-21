@@ -1,4 +1,9 @@
-﻿@model EntityLayer.Concrete.Gallery
+﻿@*@model EntityLayer.Concrete.Gallery*@
+
+@using CoreCorporate.Areas.AdminPanel.Models.Gallery
+
+@model GalleryImageAddViewModel
+
 @{
     ViewData["Title"] = "GalleryImageAdd";
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
@@ -24,13 +29,14 @@
                             <form method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     @Html.Label("Galeri Adı")
-                                    @Html.TextBoxFor(x => x.GalleryTitle, new { @class = "form-control", @readonly = "readonly" })
+                                    @Html.TextBoxFor(m => m.GalleryTitle, new { @class = "form-control", @readonly = "readonly" })
                                     @Html.ValidationMessageFor(x => x.GalleryTitle, null, new { @class = "text-danger" })
+                                    @Html.HiddenFor(m => m.GalleryId)
                                 </div>
                                 <div class="form-group">
                                     @Html.Label("Galeri Resim Ekle")
                                     <div class="custom-file">
-                                        <input id="logo" type="file" class="custom-file-input" name="GalleryImageFile" multiple>
+                                        <input id="logo" type="file" class="custom-file-input" name="FileList" multiple>
                                         <label for="logo" class="text-danger custom-file-label">Resim seçiniz.. ( Birden fazla resim seçebilirsiniz! )</label>
                                     </div>
                                 </div><br />
@@ -38,6 +44,18 @@
                                     <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Resimleri Ekle</strong></button>
                                 </div>
                             </form>
+                        </div>
+                        <div class="col-sm-12">
+                            @if (!string.IsNullOrEmpty(ViewBag.Message))
+                            {
+                                <span class="text-success">@ViewBag.Message</span>
+                            }
+                        </div>
+                        <div class="col-sm-12">
+                            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                            {
+                                <span class="text-danger">@ViewBag.ErrorMessage</span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -48,53 +66,38 @@
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Görsel</th>
-                                        <th>Gösterim Sırası</th>
-                                        <th>İşlem</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <img src="~/img/ProductCategoryImages/0a047fbf-92a4-4df3-999d-fb8abfdc0625-lifecase.jpg" class="img-lg" />
-                                        </td>
-                                        <td>
-                                            <input type="text" value="1" class="form-control" />
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-sm btn-primary">Kaydet</a>
-                                            <a href="#" class="btn btn-sm btn-danger">Sil</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="~/img/ProductCategoryImages/0a047fbf-92a4-4df3-999d-fb8abfdc0625-lifecase.jpg" class="img-lg" />
-                                        </td>
-                                        <td>
-                                            <input type="text" value="1" class="form-control" />
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-sm btn-primary">Kaydet</a>
-                                            <a href="#" class="btn btn-sm btn-danger">Sil</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="~/img/ProductCategoryImages/0a047fbf-92a4-4df3-999d-fb8abfdc0625-lifecase.jpg" class="img-lg" />
-                                        </td>
-                                        <td>
-                                            <input type="text" value="1" class="form-control" />
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-sm btn-primary">Kaydet</a>
-                                            <a href="#" class="btn btn-sm btn-danger">Sil</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <form method="post" action="@Url.Action("GalleryImageUpdate", "Gallery", new { area = "AdminPanel" })" >
+                                @Html.HiddenFor(m => m.GalleryId)
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Görsel</th>
+                                            <th>Gösterim Sırası</th>
+                                            <th>İşlem</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @for (int i = 0; i < Model.GalleryImageList.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <img src="/img/GalleryImages/@Model.GalleryImageList[i].ImageUrl" class="img-lg" />
+                                                    @Html.HiddenFor(m => Model.GalleryImageList[i].GalleryImageId)
+                                                </td>
+                                                <td>
+                                                    @*<input type="text" value="1" class="form-control" />*@
+                                                    @Html.TextBoxFor(m => Model.GalleryImageList[i].DisplayOrder)
+                                                </td>
+                                                <td>
+                                                    <button type="submit" name="SubmitType" value="btnUpdate@(Model.GalleryImageList[i].GalleryImageId)" class="btn btn-sm btn-primary">Kaydet</button>
+                                                    <button type="submit" name="SubmitType" value="btnDelete@(Model.GalleryImageList[i].GalleryImageId)" class="btn btn-sm btn-danger">Sil</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,47 @@
+﻿@using EntityLayer.Concrete
+@model List<News>
+@{
+    ViewData["Title"] = "Haberler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="innerBanner">
+    <div class="inner-content">
+        <h2><span>Haberler</span></h2>
+        <div>
+        </div>
+    </div>
+</section><!-- #Page Banner -->
+
+<main id="main">
+
+    <!--==========================
+      Services Section
+    ============================-->
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                @if (Model.Count == 0)
+                {
+                    <p>Henüz haber eklenmemiştir!</p>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-lg-6">
+                            <div class="box wow fadeInLeft" style="padding:10px;">
+                                <div class="icon">
+                                    <a href="~/News/Details?url=@item.NewsUrl">
+                                        <img src="~/img/NewsImages/@item.NewsImage" alt="@item.NewsTitle" style="width:100%; max-height:300px;" />
+                                    </a>
+                                </div>
+                                <h4 class="title" style="text-align:left;"><a href="~/News/Details?url=@item.NewsUrl">@item.NewsTitle</a></h4>
+                                <p class="description" style="text-align:left;">&nbsp;</p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+</main>

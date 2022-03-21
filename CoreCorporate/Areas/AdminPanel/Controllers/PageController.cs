@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -15,7 +16,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
     [Area("AdminPanel")]
     public class PageController : Controller
     {
-        PageManager pm = new PageManager(new EfPageRepository());
+        PageManager pm = new PageManager(new EfPageRepository(new AppDbContext()));
         PageValidator pv = new PageValidator();
 
         public IActionResult PageList()

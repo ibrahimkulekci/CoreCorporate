@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -16,8 +17,8 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
     [Area("AdminPanel")]
     public class ServiceController : Controller
     {
-        ServiceManager sm = new ServiceManager(new EfServiceRepository());
-        ServiceCategoryManager scm = new ServiceCategoryManager(new EfServiceCategoryRepository());
+        ServiceManager sm = new ServiceManager(new EfServiceRepository(new AppDbContext()));
+        ServiceCategoryManager scm = new ServiceCategoryManager(new EfServiceCategoryRepository(new AppDbContext()));
         ServiceValidator sv = new ServiceValidator();
 
         public List<SelectListItem> GetServiceCategoryList()

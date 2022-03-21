@@ -13,9 +13,9 @@ namespace BusinessLayer.ValidationRules
         public GalleryValidator()
         {
             RuleFor(x => x.GalleryTitle)
-                .NotEmpty().WithMessage("Galleri Adı alanını boş bırakmayınız!");
+                .NotEmpty().WithMessage("Galeri Adı alanını boş bırakmayınız!");
             RuleFor(x => x.GalleryContent)
-                .NotEmpty().WithMessage("Galleri Açıklaması alannı boş bırakmayınız!");
+                .NotEmpty().WithMessage("Galeri Açıklaması alannı boş bırakmayınız!");
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿@model IEnumerable<EntityLayer.Concrete.Menu>
+
+
+<nav id="nav-menu-container">
+    <ul class="nav-menu">
+        @foreach (var item in Model.Where(x => x.MenuParentID == 0))
+        {
+            <li>
+                <a href="@item.MenuUrl">@item.Name</a>
+
+                @if (Model.Where(y => y.MenuParentID == item.MenuID).Count() > 0)
+                {
+                    <ul>
+                        @foreach (var item2 in Model.Where(y => y.MenuParentID == item.MenuID))
+                        {
+                            <li><a href="@item2.MenuUrl">@item2.Name</a></li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+</nav><!-- #nav-menu-container -->

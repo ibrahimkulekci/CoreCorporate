@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -16,7 +17,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
     [Area("AdminPanel")]
     public class NewsController : Controller
     {
-        NewsManager nm = new NewsManager(new EfNewsRepository());
+        NewsManager nm = new NewsManager(new EfNewsRepository(new AppDbContext()));
         NewsValidator nv = new NewsValidator();
 
         public IActionResult NewsList()

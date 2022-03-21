@@ -27,12 +27,12 @@
                                 <div class="form-group">
                                     @Html.Label("Sayfa Adı")
                                     @Html.TextBoxFor(x => x.PageTitle, new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(x => x.PageTitle)
+                                    @Html.ValidationMessageFor(x => x.PageTitle, null, new { @class = "text-danger" })
                                 </div>
                                 <div class="form-group">
                                     @Html.Label("Sayfa İçeriği")
                                     @Html.TextAreaFor(x => x.PageContent, 10, 3, new { @class = "form-control summernote" })
-                                    @Html.ValidationMessageFor(x => x.PageContent)
+                                    @Html.ValidationMessageFor(x => x.PageContent, null, new { @class = "text-danger" })
                                 </div>
                                 <div class="form-group">
                                     @Html.Label("Yayınlansın mı?")

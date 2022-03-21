@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.Repositories;
 using EntityLayer.Concrete;
 using System;
@@ -11,5 +12,9 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfProductCategoryRepository:GenericRepository<ProductCategory>,IProductCategoryDal
     {
+        public EfProductCategoryRepository(AppDbContext dbContext) : base(dbContext)
+        {
+
+        }
     }
 }

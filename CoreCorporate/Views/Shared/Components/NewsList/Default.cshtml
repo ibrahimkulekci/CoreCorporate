@@ -1,0 +1,25 @@
+﻿@model IEnumerable<EntityLayer.Concrete.News>
+
+<section id="services">
+    <div class="container">
+        <div class="section-header">
+            <h2>Haberler / Blog</h2>
+        </div>
+
+        <div class="row">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4">
+                    <div class="box wow fadeInLeft">
+                        <div class="icon svgImg"><img src="~/img/NewsImages/@item.NewsImage" alt="@item.NewsTitle" style="width:235px;"></div>
+                        <h4 class="title" style="font-size:18px;"><a href="~/News/Details?url=@item.NewsUrl">@item.NewsTitle</a></h4>
+                        <p>&nbsp;</p>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</section>

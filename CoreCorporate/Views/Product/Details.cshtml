@@ -1,0 +1,49 @@
+﻿@model EntityLayer.Concrete.Product
+@{
+    ViewData["Title"] = Model.ProductTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="innerBanner">
+    <div class="inner-content">
+        <h2><span>@Model.ProductTitle</span></h2>
+        <div>
+        </div>
+    </div>
+</section>
+
+<main id="main">
+
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    @if (Model.ProductImage != "nullimage.jpg")
+                    {
+                        <img src="~/img/ProductImages/@Model.ProductImage" alt="@Model.ProductTitle" style="width:100%;">
+                    }
+                    else
+                    {
+                        <img src="~/@Model.ProductImage" alt="@Model.ProductTitle" style="width:100%;">
+                    }
+                </div>
+                <div class="col-md-9">
+                    <section id="services" style="padding:0px;">
+                        <div class="container" style="min-height:500px;">
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h2>@Model.ProductTitle</h2>
+                                </div>
+                                <div class="col-lg-12">
+                                    @Html.Raw(Model.ProductContent)
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

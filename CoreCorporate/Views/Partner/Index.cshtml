@@ -1,0 +1,42 @@
+﻿@using EntityLayer.Concrete
+@model List<Partner> 
+@{
+    ViewData["Title"] = "Çözüm Ortaklarımız";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="innerBanner">
+    <div class="inner-content">
+        <h2><span>Çözüm Ortaklarımız</span></h2>
+        <div>
+        </div>
+    </div>
+</section>
+
+<main id="main">
+
+    <section id="services">
+        <div class="container">
+
+            <div class="row">
+
+                @if (Model.Count <= 0)
+                {
+                    <h2 class="text-center">Henüz çözüm ortaklarımız eklenmemiştir!</h2>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-lg-4">
+                            <div class="box wow fadeInLeft" style="visibility: visible; animation-name: fadeInLeft;">
+                                <div class="icon svgImg"><img src="~/img/PartnerImages/@item.PartnerImage" alt="@item.PartnerTitle" style="width:235px;"></div>
+                                <h4 class="title"><a href="/Partner/Details?url=@item.PartnerUrl">@item.PartnerTitle</a></h4>
+                                @*<p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores quae porro consequatur aliquam, incidunt fugiat culpa esse aute nulla.</p>*@
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+</main>

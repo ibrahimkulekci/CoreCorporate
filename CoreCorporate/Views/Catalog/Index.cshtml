@@ -1,0 +1,42 @@
+﻿@using EntityLayer.Concrete
+@model List<Catalog>
+@{
+    ViewData["Title"] = "Online Kataloglar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="innerBanner">
+    <div class="inner-content">
+        <h2><span>Online Kataloglar</span></h2>
+        <div>
+        </div>
+    </div>
+</section>
+
+<main id="main">
+
+    <section id="services">
+        <div class="container">
+
+            <div class="row">
+
+                @if (Model.Count <= 0)
+                {
+                    <h2 class="text-center">Henüz online katalog eklenmemiştir!</h2>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-lg-4">
+                            <div class="box wow fadeInLeft" style="visibility: visible; animation-name: fadeInLeft;">
+                                <div class="icon svgImg"><img src="~/img/CatalogImages/@item.CatalogImage" alt="@item.CatalogTitle" style="width:235px;"></div>
+                                <h4 class="title"><a href="/Catalog/Details?url=@item.CatalogUrl">@item.CatalogTitle</a></h4>
+                                @*<p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores quae porro consequatur aliquam, incidunt fugiat culpa esse aute nulla.</p>*@
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+</main>

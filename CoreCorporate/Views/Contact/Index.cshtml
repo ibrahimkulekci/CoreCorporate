@@ -1,0 +1,82 @@
+﻿@using BusinessLayer.Common
+@model EntityLayer.Concrete.Contact
+@{
+    ViewData["Title"] = "İletişim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="innerBanner">
+    <div class="inner-content">
+        <h2><span>İletişim</span><br></h2>
+        <div>
+        </div>
+    </div>
+</section>
+
+<main id="main">
+    <!--==========================
+      Contact Section
+    ============================-->
+    <section id="contact" class="wow fadeInUp">
+        <div class="container">
+            <div class="row contact-info">
+                <div class="col-lg-5">
+                    <div class="contact-address">
+                        <i class="ion-ios-location-outline"></i>
+                        <h3>Şirket Adresi</h3>
+                        <address>@Html.Raw(SettingHelper.GetValue("site_adress"))</address>
+                    </div>
+                    <div class="contact-phone">
+                        <i class="ion-ios-telephone-outline"></i>
+                        <h3>Şirket Telefon</h3>
+                        <p><a href="tel:+155895548855">@Html.Raw(SettingHelper.GetValue("site_phone"))</a></p>
+                    </div>
+                    <div class="contact-email">
+                        <i class="ion-ios-email-outline"></i>
+                        <h3>Şirket E-posta</h3>
+                        <p><a href="mailto:@Html.Raw(SettingHelper.GetValue("site_email"))">@Html.Raw(SettingHelper.GetValue("site_email"))</a></p>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="container">
+                        <div class="form">
+
+                            @using (Html.BeginForm("Index", "Contact", FormMethod.Post))
+                            {
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.NameSurname, new { @class = "form-control", @placeholder = "Ad Soyad" })
+                                    @Html.ValidationMessageFor(x => x.NameSurname, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.Email, new { @class = "form-control", @placeholder = "E-Posta" })
+                                    @Html.ValidationMessageFor(x => x.Email, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.Phone, new { @class = "form-control", @placeholder = "Telefon" })
+                                    @Html.ValidationMessageFor(x => x.Phone, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(x => x.Subject, new { @class = "form-control", @placeholder = "Konu" })
+                                    @Html.ValidationMessageFor(x => x.Subject, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextAreaFor(x => x.Message, 10, 3, new { @class = "form-control", @placeholder = "Mesaj" })
+                                    @Html.ValidationMessageFor(x => x.Message, null, new { @class = "text-danger" })
+                                </div>
+                                <button type="submit" class="btn btn-primary pull-right">Gönder</button><br />
+                            }
+                        </div>
+                        @Html.Raw("<p>" + TempData["basari"] + "</p>")
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="container mb-4 map">
+            @Html.Raw(SettingHelper.GetValue("site_maps_embed"))
+        </div>
+
+    </section><!-- #contact -->
+
+</main>

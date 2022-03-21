@@ -1,6 +1,9 @@
-﻿using BusinessLayer.Common;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Common;
 using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.Gallery;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
@@ -17,14 +20,31 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
     [Area("AdminPanel")]
     public class GalleryController : Controller
     {
-        GalleryManager gm = new GalleryManager(new EfGalleryRepository());
+        //GalleryManager gm = new GalleryManager(new GalleryRepository());
         GalleryValidator gv = new GalleryValidator();
+
+        private readonly AppDbContext _appDbContext; //= new AppDbContext();
+
+        private readonly IGalleryService _gm;
+        private readonly IGalleryImageService _galleryImageService;
+
+        public GalleryController(AppDbContext appDbContext, IGalleryService gm, IGalleryImageService galleryImageService)
+        {
+            //_appDbContext = new AppDbContext();
+
+            _appDbContext = appDbContext;
+
+            _gm = gm;
+            _galleryImageService = galleryImageService;
+        }
+
 
         public IActionResult GalleryList()
         {
-            var values = gm.GetList();
+            var values = _gm.GetList();
             return View(values);
         }
+
         [HttpGet]
         public IActionResult GalleryAdd() 
         {
@@ -68,7 +88,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.GalleryCreatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.GalleryUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.GalleryUrl = SeoHelper.ConvertToValidUrl(p.GalleryTitle);
-                gm.TAdd(p);
+                _gm.TAdd(p);
                 return RedirectToAction("GalleryList", "Gallery");
             }
             else
@@ -83,7 +103,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
         [HttpGet]
         public IActionResult GalleryUpdate(int id)
         {
-            var values = gm.TGetById(id);
+            var values = _gm.TGetById(id);
             return View(values);
         }
         [HttpPost]
@@ -103,7 +123,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 }
                 p.GalleryUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.GalleryUrl = SeoHelper.ConvertToValidUrl(p.GalleryTitle);
-                gm.TUpdate(p);
+                _gm.TUpdate(p);
                 return RedirectToAction("GalleryUpdate", new { id = p.GalleryID });
             }
             else
@@ -115,11 +135,86 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             }
             return View();
         }
+        
         [HttpGet]
         public IActionResult GalleryImageAdd(int id)
         {
-            var values = gm.TGetById(id);
-            return View(values);
+            var existGallery = _gm.TGetById(id);
+            //return View(values);
+
+            GalleryImageAddViewModel model = new GalleryImageAddViewModel();
+
+            model.GalleryId = existGallery.GalleryID;
+            model.GalleryTitle = existGallery.GalleryTitle;
+
+            var existImageList = _galleryImageService.GetAllByGalleryId(existGallery.GalleryID);
+
+            model.GalleryImageList.AddRange(existImageList);
+
+            return View(model);
         }
+
+        [HttpPost]
+        public IActionResult GalleryImageAdd(GalleryImageAddViewModel model)
+        {
+            try
+            {
+                // dosya kaydetme adımları olacak
+                // dbye kaydetme adımları olacak
+                for (int i = 0; i < model.FileList.Count; i++)
+                {
+                    var extension = Path.GetExtension(model.FileList[i].FileName);
+                    var newImageName = Guid.NewGuid() + "-" + SeoHelper.ConvertToValidUrl(model.GalleryTitle + "-" + i) + extension;
+                    var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/GalleryImages/", newImageName);
+                    var stream = new FileStream(location, FileMode.Create);
+                    model.FileList[i].CopyTo(stream);
+                    model.GalleryImageList.Add(new GalleryImage { GalleryId = model.GalleryId, ImageUrl = newImageName, DisplayOrder = 0 });
+
+                    _galleryImageService.TAdd(model.GalleryImageList[i]);
+
+                }
+
+
+
+                ViewBag.Message = "Dosya başarıyla kaydedildi.";
+
+                var existImageList = _galleryImageService.GetAllByGalleryId(model.GalleryId);
+                model.GalleryImageList.AddRange(existImageList);
+
+            }
+            catch (Exception exception)
+            {
+                ViewBag.ErrorMessage = "Dosya kaydedilemedi. Hata detayı: " + exception.Message;
+            }
+            return RedirectToAction("GalleryList", "Gallery");
+        }
+
+        [HttpPost]
+        //public IActionResult GalleryImageUpdate(int imageId, int displayOrder, string submitType)
+        public IActionResult GalleryImageUpdate(List<GalleryImage> GalleryImageList, string SubmitType, int GalleryId)
+        {
+            if (SubmitType.StartsWith("btnUpdate"))
+            {
+                // update işlemi yapılacak
+                int selectedGalleryImageId = Convert.ToInt32(SubmitType.Replace("btnUpdate", ""));
+
+                int newDisplayOrder = GalleryImageList.Where(r => r.GalleryImageId == selectedGalleryImageId).FirstOrDefault().DisplayOrder;
+
+                var existRecord = _galleryImageService.TGetById(selectedGalleryImageId);
+                existRecord.DisplayOrder = newDisplayOrder;
+
+                _galleryImageService.TUpdate(existRecord);
+            }
+            else if (SubmitType.StartsWith("btnDelete"))
+            {
+                // delete işlemi olacak
+            }
+
+            
+            return RedirectToAction("GalleryImageAdd", "Gallery", new { id = GalleryId });
+
+        }
+
+
     }
 }

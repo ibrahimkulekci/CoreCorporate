@@ -1,48 +1,106 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using BusinessLayer.Common
+<!DOCTYPE html>
+<html lang="tr">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CoreCorporate</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CoreCorporate</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <meta charset="utf-8">
+    <title>@(ViewData["Title"]+" - "+ @SettingHelper.GetValue("site_title"))</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="@Html.Raw(SettingHelper.GetValue("site_keywords"))" name="keywords">
+    <meta content="@Html.Raw(SettingHelper.GetValue("site_description"))" name="description">
+    <!-- Favicons -->
+    <link href="~/themev1/img/favicon.png" rel="icon">
+    <link href="~/themev1/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - CoreCorporate - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="~/themev1/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Libraries CSS Files -->
+    <link href="~/themev1/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/themev1/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/themev1/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="~/themev1/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/themev1/lib/magnific-popup/magnific-popup.css" rel="stylesheet">
+    <link href="~/themev1/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="~/themev1/css/style.css" rel="stylesheet">
+    @await RenderSectionAsync("Styles", required: false)
+    @Html.Raw(SettingHelper.GetValue("site_head"))
+
+</head>
+
+<body id="body">
+
+    <!--==========================
+      Top Bar
+    ============================-->
+    <section id="topbar" class="d-none d-lg-block">
+        <div class="container clearfix">
+            <div class="contact-info float-left">
+                <i class="fa fa-envelope-o"></i> <a href="@SettingHelper.GetValue("site_email")">@SettingHelper.GetValue("site_email")</a>
+                <i class="fa fa-phone"></i> @SettingHelper.GetValue("site_phone")
+            </div>
+            <div class="social-links float-right">
+                <a href="@SettingHelper.GetValue("site_facebook_link")" class="facebook"><i class="fa fa-facebook"></i></a>
+                <a href="@SettingHelper.GetValue("site_twitter_link")" class="twitter"><i class="fa fa-twitter"></i></a>
+                <a href="@SettingHelper.GetValue("site_instagram_link")" class="instagram"><i class="fa fa-instagram"></i></a>
+                <a href="@SettingHelper.GetValue("site_linkedin_link")" class="linkedin"><i class="fa fa-linkedin"></i></a>
+
+            </div>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    </section>
+
+    <!--==========================
+      Header
+    ============================-->
+    <header id="header">
+        <div class="container">
+
+            <div id="logo" class="pull-left">
+                <h1><a href="~/" class="scrollto"><span>KOZA</span> NAKLİYAT</a></h1>
+                <!-- <a href="~/"><img src="img/logo.png" alt="" title="" /></a>-->
+            </div>
+
+            @await Component.InvokeAsync("MenuList")
+
+        </div>
+    </header><!-- #header -->
+
+    @RenderBody()
+
+    <!--==========================
+      Footer
+    ============================-->
+    <footer id="footer">
+        <div class="container">
+            <div class="copyright">
+                @Html.Raw(SettingHelper.GetValue("site_footer"))
+            </div>
+            <div class="credits">
+                Design & Developed by İbrahim Külekci
+            </div>
+        </div>
+    </footer><!-- #footer -->
+
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <!-- JavaScript  -->
+    <script src="~/themev1/lib/jquery/jquery.min.js"></script>
+    <script src="~/themev1/lib/jquery/jquery-migrate.min.js"></script>
+    <script src="~/themev1/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/themev1/lib/easing/easing.min.js"></script>
+    <script src="~/themev1/lib/superfish/hoverIntent.js"></script>
+    <script src="~/themev1/lib/superfish/superfish.min.js"></script>
+    <script src="~/themev1/lib/wow/wow.min.js"></script>
+    <script src="~/themev1/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/themev1/lib/magnific-popup/magnific-popup.min.js"></script>
+    <script src="~/themev1/lib/sticky/sticky.js"></script>
+    <script src="~/themev1/contact/jqBootstrapValidation.js"></script>
+    <script src="~/themev1/contact/contact_me.js"></script>
+    <script src="~/themev1/js/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
