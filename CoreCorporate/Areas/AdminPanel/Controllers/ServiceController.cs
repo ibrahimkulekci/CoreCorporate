@@ -1,6 +1,9 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
+using BusinessLayer.Models.Service;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.Service;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -30,6 +33,40 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                                                      Value = x.ServiceCategoryID.ToString()
                                                  }).ToList();
             return categoryList;
+        }
+
+        public IActionResult Index(ListViewModel model)
+        {
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.Service.ServiceCreatedDate);
+                model.SortDirection = "desc";
+            }
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.Service.ServiceCreatedDate);
+            }
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<ServiceWithDetail> recordList = sm.GetAllByQuery(model);
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
         }
 
         public IActionResult ServiceList()

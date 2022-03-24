@@ -1,0 +1,116 @@
+﻿@model CoreCorporate.Areas.AdminPanel.Models.Service.ListViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Tüm Hizmetler</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <a href="~/AdminPanel/Service/ServiceAdd" class="btn btn-primary btn-sm">Yeni Hizmetler Ekle</a>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-5 m-b-xs">
+                            <span>Toplam Kayıt: </span><strong>@Model.TotalRecordCount</strong>
+                        </div>
+                        <div class="col-sm-4 m-b-xs">
+
+                        </div>
+                        <div class="col-sm-3">
+                                <form method="get">
+                                    <div class="input-group">
+                                        <input placeholder="Arama" type="text" class="form-control form-control-sm" name="Filter_Search" value="@Model.Filter_Search">
+                                        <span class="input-group-append">
+                                            <button type="submit" class="btn btn-sm btn-primary">
+                                                ARA
+                                            </button>
+                                        </span>
+                                    </div>                                  
+                                </form> 
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "ServiceID", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Id <i class="fa @( Model.SortOn == "ServiceID" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "ServiceTitle", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Başlık <i class="fa @( Model.SortOn == "ServiceTitle" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "ServiceStatus", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Durumu <i class="fa @( Model.SortOn == "ServiceStatus" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "ServiceCategoryID", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Kategori <i class="fa @( Model.SortOn == "ServiceCategoryID" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "ServiceCreatedDate", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Yayın Tarihi <i class="fa @( Model.SortOn == "ServiceCreatedDate" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.DataList != null)
+                                {
+                                    foreach (var item in Model.DataList)
+                                    {
+                                        <tr>
+                                            <td>@item.ServiceID</td>
+                                            <td>@item.ServiceTitle</td>
+                                            <td>@Html.Raw(item.ServiceStatus == true ? "<span class='badge badge-success'>Yayında</span>" : "<span class='badge badge-danger'>Yayında Değil</span>")</td>
+                                            <td>@item.ServiceCategoryTitle</td>
+                                            <td>@(((DateTime)item.ServiceCreatedDate).ToString("dd.MM.yyyy"))</td>
+                                            <td> <a href="~/AdminPanel/Service/ServiceUpdate/@item.ServiceID" class="btn btn-w-m btn-primary">Düzenle</a> </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                        <ul class="pagination pagination-sm">
+                            <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")"><a class="page-link" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage-1, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">Önceki</a></li>
+
+                            @for (int i = 3; i >= 1; i--)
+                            {
+                                if (Model.CurrentPage - i >= 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage-i, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">@(Model.CurrentPage-i)</a>
+                                    </li>
+                                }
+                            }
+                            <li class="page-item active">
+                                <a class="page-link" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">@Model.CurrentPage</a>
+                            </li>
+                            @for (int i = 1; i <= 3; i++)
+                            {
+                                if (Model.CurrentPage + i <= Model.TotalPageCount)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage+i, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">@(Model.CurrentPage + i)</a>
+                                    </li>
+                                }
+                            }
+
+                            <li class="page-item @(Model.CurrentPage >= Model.TotalPageCount ? "disabled" : "")"><a class="page-link" href="@Url.Action("Index", "Service", new { CurrentPage = Model.CurrentPage+1, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">Sonraki</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

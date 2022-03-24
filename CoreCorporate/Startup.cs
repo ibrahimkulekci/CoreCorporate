@@ -79,6 +79,9 @@ namespace CoreCorporate
             services.AddTransient<ISettingRepository, EfSettingRepository>();
             services.AddTransient<ISettingService, SettingService>();
 
+            services.AddTransient<IPageDal, EfPageRepository>();
+            services.AddTransient<IPageService, PageManager>();
+
             services.AddMvc(config =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -97,6 +100,7 @@ namespace CoreCorporate
                 });               
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
