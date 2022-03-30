@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.ServiceCategory;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -19,18 +21,51 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
         ServiceCategoryManager scm = new ServiceCategoryManager(new EfServiceCategoryRepository(new AppDbContext()));
         ServiceCategoryValidator scv = new ServiceCategoryValidator();
 
-        public IActionResult ServiceCategoryList()
+
+        public IActionResult Index(ListViewModel model)
         {
-            var values = scm.GetList();
-            return View(values);
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.ServiceCategory.ServiceCategoryCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.ServiceCategory.ServiceCategoryCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<ServiceCategory> recordList = scm.GetAllByQuery(model);
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
         }
         [HttpGet]
-        public IActionResult ServiceCategoryAdd()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult ServiceCategoryAdd(ServiceCategory p)
+        public IActionResult Add(ServiceCategory p)
         {
             ValidationResult results = scv.Validate(p);
             if (results.IsValid)
@@ -38,8 +73,8 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ServiceCategoryCreatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ServiceCategoryUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ServiceCategoryUrl = SeoHelper.ConvertToValidUrl(p.ServiceCategoryTitle);
-                scm.TAdd(p);
-                return RedirectToAction("ServiceCategoryList", "ServiceCategory");
+                scm.TAdd(p);                
+                return RedirectToAction("Index", "ServiceCategory");
             }
             else
             {
@@ -51,13 +86,13 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult ServiceCategoryUpdate(int id)
+        public IActionResult Update(int id)
         {
             var values = scm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult ServiceCategoryUpdate(ServiceCategory p)
+        public IActionResult Update(ServiceCategory p)
         {
             ValidationResult results = scv.Validate(p);
             if (results.IsValid)
@@ -65,7 +100,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ServiceCategoryUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ServiceCategoryUrl = SeoHelper.ConvertToValidUrl(p.ServiceCategoryTitle);
                 scm.TUpdate(p);
-                return RedirectToAction("ServiceCategoryUpdate", new { id = p.ServiceCategoryID });
+                return RedirectToAction("Update", new { id = p.ServiceCategoryID });
             }
             else
             {

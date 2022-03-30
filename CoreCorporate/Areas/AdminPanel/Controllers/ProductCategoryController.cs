@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.ProductCategory;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -20,18 +22,52 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
         ProductCategoryManager pcm = new ProductCategoryManager(new EfProductCategoryRepository(new AppDbContext()));
         ProductCategoryValidator pcv = new ProductCategoryValidator();
 
-        public IActionResult ProductCategoryList()
+        public IActionResult Index(ListViewModel model)
         {
-            var values = pcm.GetList();
-            return View(values);
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.ProductCategory.ProductCategoryCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.ProductCategory.ProductCategoryCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<EntityLayer.Concrete.ProductCategory> recordList = pcm.GetAllByQuery(model);
+
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
         }
+
         [HttpGet]
-        public IActionResult ProductCategoryAdd()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult ProductCategoryAdd(ProductCategory p)
+        public IActionResult Add(ProductCategory p)
         {
             ValidationResult results = pcv.Validate(p);
             if (results.IsValid)
@@ -54,7 +90,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ProductCategoryUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ProductCategoryUrl = SeoHelper.ConvertToValidUrl(p.ProductCategoryTitle);
                 pcm.TAdd(p);
-                return RedirectToAction("ProductCategoryList", "ProductCategory");
+                return RedirectToAction("Index", "ProductCategory");
             }
             else
             {
@@ -66,13 +102,13 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult ProductCategoryUpdate(int id)
+        public IActionResult Update(int id)
         {
             var values = pcm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult ProductCategoryUpdate(ProductCategory p)
+        public IActionResult Update(ProductCategory p)
         {
             ValidationResult results = pcv.Validate(p);
             if (results.IsValid)
@@ -89,7 +125,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ProductCategoryUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ProductCategoryUrl = SeoHelper.ConvertToValidUrl(p.ProductCategoryTitle);
                 pcm.TUpdate(p);
-                return RedirectToAction("ProductCategoryUpdate", new { id = p.ProductCategoryID });
+                return RedirectToAction("Update", new { id = p.ProductCategoryID });
             }
             else
             {

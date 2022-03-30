@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.Catalog;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -20,18 +22,51 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
         CatalogManager cm = new CatalogManager(new EfCatalogRepository(new AppDbContext()));
         CatalogValidator cv = new CatalogValidator();
 
-        public IActionResult CatalogList()
+        public IActionResult Index(ListViewModel model)
         {
-            var values = cm.GetList();
-            return View(values);
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.Catalog.CatalogCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.Catalog.CatalogCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<EntityLayer.Concrete.Catalog> recordList = cm.GetAllByQuery(model);
+
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
         }
         [HttpGet]
-        public IActionResult CatalogAdd()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult CatalogAdd(Catalog p)
+        public IActionResult Add(Catalog p)
         {
             ValidationResult results = cv.Validate(p);
             if (results.IsValid)
@@ -53,7 +88,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.CatalogUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.CatalogUrl = SeoHelper.ConvertToValidUrl(p.CatalogTitle);
                 cm.TAdd(p);
-                return RedirectToAction("CatalogList", "Catalog");
+                return RedirectToAction("Index", "Catalog");
             }
             else
             {
@@ -65,13 +100,13 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult CatalogUpdate(int id)
+        public IActionResult Update(int id)
         {
             var values = cm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult CatalogUpdate(Catalog p)
+        public IActionResult Update(Catalog p)
         {
             ValidationResult results = cv.Validate(p);
             if (results.IsValid)
@@ -88,7 +123,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.CatalogUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.CatalogUrl = SeoHelper.ConvertToValidUrl(p.CatalogTitle);
                 cm.TUpdate(p);
-                return RedirectToAction("CatalogUpdate", new { id = p.CatalogID });
+                return RedirectToAction("Update", new { id = p.CatalogID });
             }
             else
             {

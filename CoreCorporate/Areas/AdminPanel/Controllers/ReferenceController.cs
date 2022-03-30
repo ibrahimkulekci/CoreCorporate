@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.Reference;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -20,18 +22,51 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
         ReferenceManager rm = new ReferenceManager(new EfReferenceRepository(new AppDbContext()));
         ReferenceValidator rv = new ReferenceValidator();
 
-        public IActionResult ReferenceList()
+        public IActionResult Index(ListViewModel model)
         {
-            var values = rm.GetList();
-            return View(values);
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.Reference.ReferenceCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.Reference.ReferenceCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<EntityLayer.Concrete.Reference> recordList = rm.GetAllByQuery(model);
+
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
         }
         [HttpGet]
-        public IActionResult ReferenceAdd()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult ReferenceAdd(Reference p)
+        public IActionResult Add(Reference p)
         {
             ValidationResult results = rv.Validate(p);
             if (results.IsValid)
@@ -53,7 +88,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ReferenceUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ReferenceUrl = SeoHelper.ConvertToValidUrl(p.ReferenceTitle);
                 rm.TAdd(p);
-                return RedirectToAction("ReferenceList", "Reference");
+                return RedirectToAction("Index", "Reference");
             }
             else
             {
@@ -65,13 +100,13 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult ReferenceUpdate(int id)
+        public IActionResult Update(int id)
         {
             var values = rm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult ReferenceUpdate(Reference p)
+        public IActionResult Update(Reference p)
         {
             ValidationResult results = rv.Validate(p);
             if (results.IsValid)
@@ -88,7 +123,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ReferenceUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ReferenceUrl = SeoHelper.ConvertToValidUrl(p.ReferenceTitle);
                 rm.TUpdate(p);
-                return RedirectToAction("ReferenceUpdate", new { id = p.ReferenceID });
+                return RedirectToAction("Update", new { id = p.ReferenceID });
             }
             else
             {

@@ -1,6 +1,9 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
+using BusinessLayer.Models.Product;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.Product;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -34,19 +37,53 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return categoryList;
         }
 
-        public IActionResult ProductList()
+        public IActionResult Index(ListViewModel model) 
         {
-            var values = pm.GetList();
-            return View(values);
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.Product.ProductCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.Product.ProductCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<ProductWithDetail> recordList = pm.GetAllByQuery(model);
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
+
+
         }
         [HttpGet]
-        public IActionResult ProductAdd()
+        public IActionResult Add()
         {
             ViewBag.categoryList = GetProductCategoryList();
             return View();
         }
         [HttpPost]
-        public IActionResult ProductAdd(Product p)
+        public IActionResult Add(Product p)
         {
             ValidationResult results = pv.Validate(p);
             if (results.IsValid)
@@ -68,7 +105,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ProductUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ProductUrl = SeoHelper.ConvertToValidUrl(p.ProductTitle);
                 pm.TAdd(p);
-                return RedirectToAction("ProductList", "Product");
+                return RedirectToAction("Index", "Product");
             }
             else
             {
@@ -81,14 +118,14 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult ProductUpdate(int id)
+        public IActionResult Update(int id)
         {
             ViewBag.categoryList = GetProductCategoryList();
             var values = pm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult ProductUpdate(Product p)
+        public IActionResult Update(Product p)
         {
             ValidationResult results = pv.Validate(p);
             if (results.IsValid)
@@ -105,7 +142,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ProductUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ProductUrl = SeoHelper.ConvertToValidUrl(p.ProductTitle);
                 pm.TUpdate(p);
-                return RedirectToAction("ProductUpdate", new { id = p.ProductID });
+                return RedirectToAction("Update", new { id = p.ProductID });
             }
             else
             {

@@ -1,0 +1,124 @@
+﻿@model CoreCorporate.Areas.AdminPanel.Models.ListViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Tüm Ekip Üyeleri</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <a href="~/AdminPanel/Team/Add" class="btn btn-primary btn-sm">Yeni Ekip Üyesi Ekle</a>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-5 m-b-xs">
+                            <span>Toplam Kayıt: </span><strong>@Model.TotalRecordCount</strong>
+                        </div>
+                        <div class="col-sm-4 m-b-xs">
+
+                        </div>
+                        <div class="col-sm-3">
+                            <form method="get">
+                                <div class="input-group">
+                                    <input placeholder="Arama" type="text" class="form-control form-control-sm" name="Filter_Search" value="@Model.Filter_Search">
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            ARA
+                                        </button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Team", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "TeamID", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Id <i class="fa @( Model.SortOn == "TeamID" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Team", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "TeamName", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Başlık <i class="fa @( Model.SortOn == "TeamName" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Team", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "TeamStatus", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Durumu <i class="fa @( Model.SortOn == "TeamStatus" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>
+                                        <a class="" href="@Url.Action("Index", "Team", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = "TeamCreatedDate", SortDirection = Model.SortDirection=="asc"?"desc":"asc"  })"> Yayın Tarihi <i class="fa @( Model.SortOn == "TeamCreatedDate" ? (Model.SortDirection=="asc"?"fa-arrow-up":"fa-arrow-down") : "" )"></i></a>
+                                    </th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.DataList != null)
+                                {
+                                    foreach (var item in Model.DataList)
+                                    {
+                                        <tr>
+                                            <td>@item.TeamID</td>
+                                            <td>@item.TeamName</td>
+                                            <td>@Html.Raw(item.TeamStatus == true ? "<span class='badge badge-success'>Yayında</span>" : "<span class='badge badge-danger'>Yayında Değil</span>")</td>
+                                            <td>@(((DateTime)item.TeamCreatedDate).ToString("dd.MM.yyyy"))</td>
+                                            <td> <a href="~/AdminPanel/Team/Update/@item.TeamID" class="btn btn-w-m btn-primary">Düzenle</a> </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                        <ul class="pagination pagination-sm">
+                            <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")"><a class="page-link" href="@Url.Action("Index", "Team", new { CurrentPage = Model.CurrentPage-1, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">Önceki</a></li>
+
+                            @for (int i = 3; i >= 1; i--)
+                            {
+                                if (Model.CurrentPage - i >= 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Team", new { CurrentPage = Model.CurrentPage-i, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">@(Model.CurrentPage-i)</a>
+                                    </li>
+                                }
+                            }
+                            <li class="page-item active">
+                                <a class="page-link" href="@Url.Action("Index", "Team", new { CurrentPage = Model.CurrentPage, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">@Model.CurrentPage</a>
+                            </li>
+                            @for (int i = 1; i <= 3; i++)
+                            {
+                                if (Model.CurrentPage + i <= Model.TotalPageCount)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Team", new { CurrentPage = Model.CurrentPage+i, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">@(Model.CurrentPage + i)</a>
+                                    </li>
+                                }
+                            }
+
+                            <li class="page-item @(Model.CurrentPage >= Model.TotalPageCount ? "disabled" : "")"><a class="page-link" href="@Url.Action("Index", "Team", new { urrentPage = Model.CurrentPage+1, PageSize = Model.PageSize, SortOn = Model.SortOn, SortDirection = Model.SortDirection  })">Sonraki</a></li>
+                        </ul>
+
+                        <div>
+                            @if (!string.IsNullOrEmpty(Model.UIMessageType) && Model.UIMessageType == "Success")
+                            {
+                                <strong class="text-success">@Model.UIMessageContent</strong>
+                            }
+                            else if (!string.IsNullOrEmpty(Model.UIMessageType) && Model.UIMessageType == "Error")
+                            {
+                                <strong class="text-danger">@Model.UIMessageContent</strong>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

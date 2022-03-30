@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.News;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -20,18 +22,54 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
         NewsManager nm = new NewsManager(new EfNewsRepository(new AppDbContext()));
         NewsValidator nv = new NewsValidator();
 
+        public IActionResult Index(ListViewModel model)
+        {
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.News.NewsCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.News.NewsCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+            BaseResultListModel<News> recordList = nm.GetAllByQuery(model);
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
+        }
         public IActionResult NewsList()
         {
             var values = nm.GetList();
             return View(values);
         }
         [HttpGet]
-        public IActionResult NewsAdd()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult NewsAdd(News p)
+        public IActionResult Add(News p)
         {
             ValidationResult results = nv.Validate(p);
             if (results.IsValid)
@@ -53,7 +91,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.NewsUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.NewsUrl = SeoHelper.ConvertToValidUrl(p.NewsTitle);
                 nm.TAdd(p);
-                return RedirectToAction("NewsList", "News");
+                return RedirectToAction("Index", "News");
             }
             else
             {
@@ -66,13 +104,13 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult NewsUpdate(int id)
+        public IActionResult Update(int id)
         {
             var values = nm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult NewsUpdate(News p)
+        public IActionResult Update(News p)
         {
             ValidationResult results = nv.Validate(p);
             if (results.IsValid)
@@ -89,7 +127,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.NewsUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.NewsUrl = SeoHelper.ConvertToValidUrl(p.NewsTitle);
                 nm.TUpdate(p);
-                return RedirectToAction("NewsUpdate", new { id = p.NewsID });
+                return RedirectToAction("Update", new { id = p.NewsID });
             }
             else
             {

@@ -68,20 +68,14 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
 
             return View(model);
         }
-
-        public IActionResult ServiceList()
-        {
-            var values = sm.GetList();
-            return View(values);
-        }
         [HttpGet]
-        public IActionResult ServiceAdd()
+        public IActionResult Add()
         {            
             ViewBag.categoryList = GetServiceCategoryList();
             return View();
         }
         [HttpPost]
-        public IActionResult ServiceAdd(Service p)
+        public IActionResult Add(Service p)
         {
             ValidationResult results = sv.Validate(p);
             if (results.IsValid)
@@ -103,7 +97,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ServiceUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ServiceUrl = SeoHelper.ConvertToValidUrl(p.ServiceTitle);
                 sm.TAdd(p);
-                return RedirectToAction("ServiceList", "Service");
+                return RedirectToAction("Index", "Service");
             }
             else
             {
@@ -116,14 +110,14 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult ServiceUpdate(int id)
+        public IActionResult Update(int id)
         {
             ViewBag.categoryList = GetServiceCategoryList();
             var values = sm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult ServiceUpdate(Service p)
+        public IActionResult Update(Service p)
         {
             ValidationResult results = sv.Validate(p);
             if (results.IsValid)
@@ -140,7 +134,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.ServiceUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.ServiceUrl = SeoHelper.ConvertToValidUrl(p.ServiceTitle);
                 sm.TUpdate(p);
-                return RedirectToAction("ServiceUpdate", new { id = p.ServiceID });
+                return RedirectToAction("Update", new { id = p.ServiceID });
             }
             else
             {

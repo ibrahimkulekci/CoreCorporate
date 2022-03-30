@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
 using CoreCorporate.Areas.AdminPanel.Models.Gallery;
 using DataAccessLayer.Concrete;
@@ -38,20 +39,53 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             _galleryImageService = galleryImageService;
         }
 
-
-        public IActionResult GalleryList()
+        public IActionResult Index(ListViewModel model)
         {
-            var values = _gm.GetList();
-            return View(values);
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.Gallery.GalleryCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.Gallery.GalleryCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<EntityLayer.Concrete.Gallery> recordList = _gm.GetAllByQuery(model);
+
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
+
         }
 
         [HttpGet]
-        public IActionResult GalleryAdd() 
+        public IActionResult Add() 
         {
             return View();
         }
         [HttpPost]
-        public IActionResult GalleryAdd(Gallery p)
+        public IActionResult Add(Gallery p)
         {
             ValidationResult results = gv.Validate(p);
             if (results.IsValid)
@@ -89,7 +123,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.GalleryUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.GalleryUrl = SeoHelper.ConvertToValidUrl(p.GalleryTitle);
                 _gm.TAdd(p);
-                return RedirectToAction("GalleryList", "Gallery");
+                return RedirectToAction("Index", "Gallery");
             }
             else
             {
@@ -101,13 +135,13 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult GalleryUpdate(int id)
+        public IActionResult Update(int id)
         {
             var values = _gm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult GalleryUpdate(Gallery p)
+        public IActionResult Update(Gallery p)
         {
             ValidationResult results = gv.Validate(p);
             if (results.IsValid)
@@ -124,7 +158,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.GalleryUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.GalleryUrl = SeoHelper.ConvertToValidUrl(p.GalleryTitle);
                 _gm.TUpdate(p);
-                return RedirectToAction("GalleryUpdate", new { id = p.GalleryID });
+                return RedirectToAction("Update", new { id = p.GalleryID });
             }
             else
             {
@@ -186,7 +220,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             {
                 ViewBag.ErrorMessage = "Dosya kaydedilemedi. Hata detayı: " + exception.Message;
             }
-            return RedirectToAction("GalleryList", "Gallery");
+            return RedirectToAction("Index", "Gallery");
         }
 
         [HttpPost]

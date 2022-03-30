@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -20,18 +22,52 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
         TeamManager tm = new TeamManager(new EfTeamRepository(new AppDbContext()));
         TeamValidator tv = new TeamValidator();
 
-        public IActionResult TeamList()
+        public IActionResult Index(ListViewModel model)
         {
-            var values = tm.GetList();
-            return View(values);
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.Team.TeamCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.Team.TeamCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<EntityLayer.Concrete.Team> recordList = tm.GetAllByQuery(model);
+
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
         }
+
         [HttpGet]
-        public IActionResult TeamAdd()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult TeamAdd(Team p)
+        public IActionResult Add(Team p)
         {
             ValidationResult results = tv.Validate(p);
             if (results.IsValid)
@@ -53,7 +89,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.TeamUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.TeamUrl = SeoHelper.ConvertToValidUrl(p.TeamName);
                 tm.TAdd(p);
-                return RedirectToAction("TeamList", "Team");
+                return RedirectToAction("Index", "Team");
             }
             else
             {
@@ -65,13 +101,13 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult TeamUpdate(int id)
+        public IActionResult Update(int id)
         {
             var values = tm.TGetById(id);
             return View(values);
         }
         [HttpPost]
-        public IActionResult TeamUpdate(Team p)
+        public IActionResult Update(Team p)
         {
             ValidationResult results = tv.Validate(p);
             if (results.IsValid)
@@ -88,7 +124,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.TeamUpdatedDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.TeamUrl = SeoHelper.ConvertToValidUrl(p.TeamName);
                 tm.TUpdate(p);
-                return RedirectToAction("TeamUpdate", new { id = p.TeamID });
+                return RedirectToAction("Update", new { id = p.TeamID });
             }
             else
             {

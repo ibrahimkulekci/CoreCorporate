@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Common;
 using BusinessLayer.Concrete;
+using BusinessLayer.Models;
 using BusinessLayer.ValidationRules;
+using CoreCorporate.Areas.AdminPanel.Models.Partner;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
@@ -20,18 +22,51 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
         PartnerManager pm = new PartnerManager(new EfPartnerRepository(new AppDbContext()));
         PartnerValidator pv = new PartnerValidator();
 
-        public IActionResult PartnerList()
+        public IActionResult Index(ListViewModel model)
         {
-            var values = pm.GetList();
-            return View(values);
+            if (model == null)
+            {
+                model = new ListViewModel();
+                model.CurrentPage = 1;
+                model.PageSize = 10;
+                model.SortOn = nameof(EntityLayer.Concrete.Partner.PartnerCreatedDate);
+                model.SortDirection = "desc";
+            }
+
+            if (model.CurrentPage == 0)
+            {
+                model.CurrentPage = 1;
+            }
+
+            if (model.PageSize == 0)
+            {
+                model.PageSize = 10;
+            }
+
+            if (string.IsNullOrEmpty(model.SortOn))
+            {
+                model.SortOn = nameof(EntityLayer.Concrete.Partner.PartnerCreatedDate);
+            }
+
+            if (string.IsNullOrEmpty(model.SortDirection))
+            {
+                model.SortDirection = "desc";
+            }
+
+            BaseResultListModel<EntityLayer.Concrete.Partner> recordList = pm.GetAllByQuery(model);
+
+            model.DataList = recordList.DataList;
+            model.TotalRecordCount = recordList.TotalRecordCount;
+
+            return View(model);
         }
         [HttpGet]
-        public IActionResult PartnerAdd()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult PartnerAdd(Partner p)
+        public IActionResult Add(Partner p)
         {
             ValidationResult results = pv.Validate(p);
             if (results.IsValid)
@@ -53,7 +88,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.PartnerUpdateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.PartnerUrl = SeoHelper.ConvertToValidUrl(p.PartnerTitle);
                 pm.TAdd(p);
-                return RedirectToAction("PartnerList", "Partner");
+                return RedirectToAction("Index", "Partner");
             }
             else
             {
@@ -65,13 +100,13 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult PartnerUpdate(int id)
+        public IActionResult Update(int id)
         {
             var values = pm.TGetById(id);
             return View(values);
-        } 
+        }
         [HttpPost]
-        public IActionResult PartnerUpdate(Partner p)
+        public IActionResult Update(Partner p)
         {
             ValidationResult results = pv.Validate(p);
             if (results.IsValid)
@@ -88,7 +123,7 @@ namespace CoreCorporate.Areas.AdminPanel.Controllers
                 p.PartnerUpdateDate = DateTime.Parse(DateTime.Now.ToShortDateString());
                 p.PartnerUrl = SeoHelper.ConvertToValidUrl(p.PartnerTitle);
                 pm.TUpdate(p);
-                return RedirectToAction("PartnerUpdate", new { id = p.PartnerID });
+                return RedirectToAction("Update", new { id = p.PartnerID });
             }
             else
             {
