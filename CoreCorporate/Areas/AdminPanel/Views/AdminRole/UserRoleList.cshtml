@@ -1,0 +1,55 @@
+﻿@using EntityLayer.Concrete
+@model List<AppUser>
+@{
+    ViewData["Title"] = "UserRoleList";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Üyeler ve Yetkileri</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <a href="~/AdminPanel/AdminRole/Add" class="btn btn-primary btn-sm">Yeni Yetki Ekle</a>
+                    <a href="~/AdminPanel/AdminRole/Index" class="btn btn-warning btn-sm">Yetki Listesi</a>
+                </div>
+                <div class="ibox-content">
+
+
+                    @if (Model.Count <= 0)
+                    {
+                        <h2 class="text-center">Henüz sayfa eklenmemiştir!</h2>
+                    }
+                    else
+                    {
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı</th>
+                                    <th>Rol Ata</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.UserName</td>
+                                        <td><a href="~/AdminPanel/AdminRole/AssignRole/@item.Id" class="btn btn-outline-success">Yetki Ver</a></td>
+         
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

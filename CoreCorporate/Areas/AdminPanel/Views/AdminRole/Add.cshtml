@@ -1,0 +1,46 @@
+﻿@using CoreCorporate.Areas.AdminPanel.Models.AdminRole
+@model AdminRoleAddViewModel
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Yeni Yetki Ekle</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @using (Html.BeginForm("Add", "AdminRole", FormMethod.Post))
+                            {
+                                <div class="form-group">
+                                    @Html.Label("Yetki Adı")
+                                    <input type="text" asp-for="@Model.Name" class="form-control" />
+                                </div>
+                                <div class="form-group" asp-validation-summary="ModelOnly">
+
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary float-right" type="submit"><strong>Yayınla</strong></button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

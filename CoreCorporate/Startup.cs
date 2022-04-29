@@ -4,11 +4,13 @@ using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using DataAccessLayer.Repositories;
+using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +35,20 @@ namespace CoreCorporate
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppDbContext>();
+            services.AddIdentity<AppUser, AppRole>(x=> 
+            {
+                x.Password.RequireUppercase = false; //Kayýt olurken þifrede büyük hark zorunluluðunu kaldýr.
+                x.Password.RequireNonAlphanumeric = false; //Kayýt olurken þifrede özel karakter zorunluluðunu kaldýr.
+                x.Password.RequireLowercase = false;
+            }).AddEntityFrameworkStores<AppDbContext>();
+
+            services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
+            {
+                options.LoginPath = "/AdminPanel/User/Login";
+                options.LogoutPath = "/AdminPanel/User/Logout";
+            });
+
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AppDbConnectionString")));
 
             services.AddTransient(typeof(IGenericDal<>), typeof(GenericRepository<>));
@@ -97,7 +113,11 @@ namespace CoreCorporate
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(x => {
                     x.LoginPath = "/AdminPanel/User/Login";
-                });               
+                });
+
+            services.ConfigureApplicationCookie(options => {
+                options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/AdminPanel/User/AccessDenied");
+            });
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddControllersWithViews().AddNewtonsoftJson();
