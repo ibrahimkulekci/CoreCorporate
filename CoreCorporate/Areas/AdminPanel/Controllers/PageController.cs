@@ -7,6 +7,7 @@ using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,7 @@ using static BusinessLayer.Common.DataTableHelper;
 namespace CoreCorporate.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class PageController : Controller
     {
         //PageManager pm = new PageManager(new EfPageRepository(new AppDbContext()));

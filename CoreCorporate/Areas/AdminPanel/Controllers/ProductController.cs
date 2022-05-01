@@ -8,6 +8,7 @@ using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -19,6 +20,7 @@ using System.Threading.Tasks;
 namespace CoreCorporate.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class ProductController : Controller
     {
         ProductManager pm = new ProductManager(new EfProductRepository(new AppDbContext()));

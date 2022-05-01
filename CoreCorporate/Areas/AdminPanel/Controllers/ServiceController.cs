@@ -8,6 +8,7 @@ using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -18,6 +19,7 @@ using System.Linq;
 namespace CoreCorporate.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class ServiceController : Controller
     {
         ServiceManager sm = new ServiceManager(new EfServiceRepository(new AppDbContext()));

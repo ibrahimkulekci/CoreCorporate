@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace CoreCorporate.Areas.AdminPanel.Controllers
 {
     [Area("AdminPanel")]
+    [Authorize(Roles = "Admin,Moderatör,Yazar,Üye")]
     public class HomeController : Controller
     {
         AppDbContext con = new AppDbContext();

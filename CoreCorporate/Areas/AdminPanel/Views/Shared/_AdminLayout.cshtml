@@ -51,7 +51,7 @@
                     <li>
                         <a href="~/AdminPanel"><i class="fa fa-th-large"></i> <span class="nav-label">Anasayfa</span></a>
                     </li>
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Sayfalar</span> <span class="fa arrow"></span></a>
@@ -61,7 +61,7 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Hizmetler</span> <span class="fa arrow"></span></a>
@@ -73,7 +73,7 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör") || User.IsInRole("Yazar"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Haberler</span> <span class="fa arrow"></span></a>
@@ -83,7 +83,7 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Ürünler</span> <span class="fa arrow"></span></a>
@@ -95,7 +95,7 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Galeriler</span> <span class="fa arrow"></span></a>
@@ -105,7 +105,7 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Çözüm Ortakları</span> <span class="fa arrow"></span></a>
@@ -115,7 +115,7 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Referanslar</span> <span class="fa arrow"></span></a>
@@ -125,7 +125,7 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Online Kataloglar</span> <span class="fa arrow"></span></a>
@@ -135,7 +135,7 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Ekip Üyeleri</span> <span class="fa arrow"></span></a>
@@ -145,25 +145,25 @@
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="~/AdminPanel/Menu/Index"><i class="fa fa-th-large"></i> <span class="nav-label">Menü</span></a>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="~/AdminPanel/Slider/Index"><i class="fa fa-th-large"></i> <span class="nav-label">Sliderlar</span></a>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="~/AdminPanel/Contact/Index"><i class="fa fa-th-large"></i> <span class="nav-label">İletişim</span></a>
                         </li>
                     }
-                    @if (User.IsInRole(role: "Admin"))
+                    @if (User.IsInRole(role: "Admin") || User.IsInRole("Moderatör"))
                     {
                         <li>
                             <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Ayarlar</span> <span class="fa arrow"></span></a>
